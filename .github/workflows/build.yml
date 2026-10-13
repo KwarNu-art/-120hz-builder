@@ -1,0 +1,21 @@
+name: Build 120Hz dylib
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Compile 120hz.dylib
+        run: |
+          xcrun -sdk iphoneos clang -arch arm64 -arch arm64e -shared \
+            -framework Foundation -framework UIKit -framework QuartzCore \
+            -o 120hz.dylib 120hz.m
+      - name: Upload dylib as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: 120hz-dylib
+          path: 120hz.dylib
